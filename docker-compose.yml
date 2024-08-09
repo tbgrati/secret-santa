@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  postgres-development:
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: secret-santa
+    ports:
+      - "5432:5432"
