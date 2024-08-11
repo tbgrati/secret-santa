@@ -9,13 +9,13 @@ generator client {
 
 model Group {
     id      String    @id @default(uuid()) @db.Uuid
-    name    BigInt
+    name    String
     members GroupPerson[]
 }
 
 model Person {
     id      String        @id @default(uuid()) @db.Uuid
-    name    BigInt
+    name    String
     groups  GroupPerson[]
     gifter  SecretSanta[] @relation("Gifter")
     giftee  SecretSanta[] @relation("Giftee")
@@ -30,6 +30,7 @@ model GroupPerson {
     group  Group  @relation(fields: [groupId], references: [id])
 
     @@unique([personId, groupId])
+    //possibly remove Unique identifier since people can belong to different groups
 }
 
 model SecretSanta {
@@ -42,4 +43,5 @@ model SecretSanta {
     giftee Person @relation("Giftee", fields: [gifteeId], references: [id])
 
     @@unique([gifterId, gifteeId, year])
+    //possibly remove Unique identifier since gifter-giftee can be repeated every 3 years
 }
