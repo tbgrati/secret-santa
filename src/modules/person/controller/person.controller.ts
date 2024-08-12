@@ -1,5 +1,5 @@
 import {PersonServiceImpl} from '../service/person.service.impl';
-import BodyValidator from '../../../utils/bodyvalidator'
+import BodyValidator from '../../../utils/body-validator'
 import {CreatePersonDTO} from "../dto";
 import {db} from '../../../utils/database'
 import {Router} from 'express';

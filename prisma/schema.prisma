@@ -28,9 +28,6 @@ model GroupPerson {
 
     person Person @relation(fields: [personId], references: [id])
     group  Group  @relation(fields: [groupId], references: [id])
-
-    @@unique([personId, groupId])
-    //possibly remove Unique identifier since people can belong to different groups
 }
 
 model SecretSanta {
@@ -43,5 +40,4 @@ model SecretSanta {
     giftee Person @relation("Giftee", fields: [gifteeId], references: [id])
 
     @@unique([gifterId, gifteeId, year])
-    //possibly remove Unique identifier since gifter-giftee can be repeated every 3 years
 }

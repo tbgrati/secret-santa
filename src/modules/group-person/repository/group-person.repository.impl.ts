@@ -13,4 +13,11 @@ export class GroupPersonRepositoryImpl implements GroupPersonRepository{
             }
         });
     }
+
+    async getGroupPersons(groupId:string){
+        return this.db.groupPerson.findMany({
+            where: { groupId },
+            select: { personId: true }
+        });
+    }
 }
