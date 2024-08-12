@@ -1,6 +1,6 @@
 
 
 export interface SecretSantaRepository{
-    createSecretSanta(gifterId: string, gifteeId: string)
+    create(gifterId: string, gifteeId: string)
     findSecretSantasByGroupId(groupId: string)
 }

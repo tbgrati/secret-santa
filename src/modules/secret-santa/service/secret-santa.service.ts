@@ -1,5 +1,5 @@
 
 
 export interface SecretSantaService{
-    getHistory()
+    getHistory(groupId: string)
 }

@@ -17,8 +17,6 @@ model Person {
     id      String        @id @default(uuid()) @db.Uuid
     name    String
     groups  GroupPerson[]
-    gifter  SecretSanta[] @relation("Gifter")
-    giftee  SecretSanta[] @relation("Giftee")
 }
 
 model GroupPerson {
@@ -28,6 +26,11 @@ model GroupPerson {
 
     person Person @relation(fields: [personId], references: [id])
     group  Group  @relation(fields: [groupId], references: [id])
+
+    gifter  SecretSanta[] @relation("Gifter")
+    giftee  SecretSanta[] @relation("Giftee")
+
+    @@unique([personId, groupId])
 }
 
 model SecretSanta {
@@ -36,8 +39,8 @@ model SecretSanta {
     gifteeId String  @db.Uuid
     year     Int
 
-    gifter Person @relation("Gifter", fields: [gifterId], references: [id])
-    giftee Person @relation("Giftee", fields: [gifteeId], references: [id])
+    gifter GroupPerson @relation("Gifter", fields: [gifterId], references: [id])
+    giftee GroupPerson @relation("Giftee", fields: [gifteeId], references: [id])
 
     @@unique([gifterId, gifteeId, year])
 }

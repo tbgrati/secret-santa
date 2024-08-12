@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import {GroupRepository} from "../repository/group.repository";
 import {GroupService} from "./group.service";
 import {CreateGroupDTO} from "../dto";
-import {GroupPersonRepository} from "../../group-person/repository/group-person.repository";
+import {GroupPersonRepository} from "../repository/group-person.repository";
 
 
 export class GroupServiceImpl implements GroupService {

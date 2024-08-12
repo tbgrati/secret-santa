@@ -2,11 +2,12 @@ import {Router} from "express";
 import {db} from "../../../utils/database";
 import {GroupServiceImpl} from "../service/group.service.impl";
 import {GroupRepositoryImpl} from "../repository/group.repository.impl";
-import {GroupPersonRepositoryImpl} from "../../group-person/repository/group-person.repository.impl";
+import {GroupPersonRepositoryImpl} from "../repository/group-person.repository.impl";
 
 export const groupRouter = Router()
 
-const groupService = new GroupServiceImpl(new GroupRepositoryImpl(db), new GroupPersonRepositoryImpl(db))
+export const groupPersonRepository = new GroupPersonRepositoryImpl(db)
+const groupService = new GroupServiceImpl(new GroupRepositoryImpl(db), groupPersonRepository)
 
 groupRouter.post('/', async (req, res) => {
     try {

@@ -7,6 +7,7 @@ import {PersonRepositoryImpl} from "../repository/person.repository.impl";
 
 
 export const personRouter = Router()
+
 const personService = new PersonServiceImpl(new PersonRepositoryImpl(db))
 
 personRouter.post('/', BodyValidator(CreatePersonDTO), async (req, res) => {
