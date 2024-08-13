@@ -8,6 +8,12 @@ export class CreateGroupDTO{
 }
 
 export class GroupPersonDTO{
+    constructor(groupPerson: GroupPersonDTO){
+        this.id = groupPerson.id
+        this.name = groupPerson.name
+    }
+
     id: string
     name: string
 }
+

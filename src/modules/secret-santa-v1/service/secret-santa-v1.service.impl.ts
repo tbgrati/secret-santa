@@ -1,10 +1,7 @@
 import {SecretSantaV1Service} from "./secret-santa-v1.service";
 import {GroupPersonRepository} from "../../group/repository/group-person.repository";
 import {SecretSantaRepository} from "../../secret-santa/repository/secret-santa.repository";
-
-interface Person {
-    personId: string;
-}
+import {GroupPersonDTO} from "../../group/dto";
 
 export class SecretSantaV1ServiceImpl implements SecretSantaV1Service {
 
@@ -26,15 +23,13 @@ export class SecretSantaV1ServiceImpl implements SecretSantaV1Service {
         for (let i = 0; i < shuffledPersons.length; i++) {
             const gifter = shuffledPersons[i];
             const giftee = shuffledPersons[(i + 1) % shuffledPersons.length];
-            console.log(gifter,giftee)
-            await this.secretSantaRepository.create(gifter, giftee);
-            assignments[gifter] = giftee;
+            await this.secretSantaRepository.create(gifter.id, giftee.id);
+            assignments[gifter.name] = giftee.name;
         }
-        //TODO: fix this shouldnt return ids but person names
         return assignments;
     }
 
-    private shuffleArray(array: string[]): string[] {
+    private shuffleArray(array: GroupPersonDTO[]): GroupPersonDTO[] {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];

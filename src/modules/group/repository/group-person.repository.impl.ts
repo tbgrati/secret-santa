@@ -1,5 +1,6 @@
 import {GroupPersonRepository} from "./group-person.repository";
 import {PrismaClient} from "@prisma/client";
+import {GroupPersonDTO} from "../dto";
 
 
 export class GroupPersonRepositoryImpl implements GroupPersonRepository{
@@ -14,22 +15,22 @@ export class GroupPersonRepositoryImpl implements GroupPersonRepository{
         });
     }
 
-    async getGroupPersons(groupId:string){
+    async getGroupPersons(groupId:string): Promise <GroupPersonDTO[]> {
         const groupPersons = await this.db.groupPerson.findMany({
             where: { groupId },
             select: {
                 id: true,
-                select:{
-                    person: {
-                        select: {
-                            name: true
-                        }
+                person: {
+                    select: {
+                        name: true,
                     }
                 }
             }
         });
 
-        //TODO: modify this map to include personName
-        return groupPersons.map(groupPerson => groupPerson.id)
+        return groupPersons.map(groupPerson => new GroupPersonDTO({
+            id: groupPerson.id,
+            name: groupPerson.person.name
+        }));
     }
 }

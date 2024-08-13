@@ -6,7 +6,21 @@ export class SecretSantaServiceImpl implements SecretSantaService{
 
     constructor(private secretSantaRepository: SecretSantaRepository) {}
     async getHistory(groupId: string) {
-        return this.secretSantaRepository.findSecretSantasByGroupId(groupId)
+        const secretSantas = await this.secretSantaRepository.getSecretSantaHistoryByGroupId(groupId)
+
+        const result: Record<string, Record<string, string>> = {};
+
+        secretSantas.forEach(secretSanta => {
+            const { year, gifter, giftee } = secretSanta;
+
+            if (!result[year]) {
+                result[year] = {};
+            }
+
+            result[year][gifter] = giftee;
+        });
+
+        return result;
     }
 
 }

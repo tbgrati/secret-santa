@@ -1,5 +1,6 @@
 import {SecretSantaRepository} from "./secret-santa.repository";
 import {PrismaClient} from "@prisma/client";
+import {SecretSantaHistoryDTO} from "../dto";
 
 export class SecretSantaRepositoryImpl implements SecretSantaRepository{
 
@@ -15,22 +16,7 @@ export class SecretSantaRepositoryImpl implements SecretSantaRepository{
             },
         });
     }
-    async getGroupSecretSantasByYear(groupId: string, year: number){
-        return this.db.secretSanta.findMany({
-            where: {
-                groupId: groupId,
-                year: {
-                    gte: year
-                },
-                select: {
-                    gifter: true,
-                    giftee: true
-                }
-            }
-        });
-    }
-
-    async getSecretSantasByGroupId(groupId: string) {
+    async getGroupSecretSantasByYear(groupId: string, year: number): Promise<SecretSantaHistoryDTO[]>{
         const secretSantas = await this.db.secretSanta.findMany({
             where: {
                 gifter: {
@@ -67,21 +53,56 @@ export class SecretSantaRepositoryImpl implements SecretSantaRepository{
             },
         });
 
-        const result: Record<string, Record<string, string>> = {};
 
-        secretSantas.forEach(entry => {
-            const { year, gifter, giftee } = entry;
-            const gifterName = gifter.person.name;
-            const gifteeName = giftee.person.name;
+        return secretSantas.map(secretSanta => new SecretSantaHistoryDTO({
+            gifter: secretSanta.gifter.person.name,
+            giftee: secretSanta.giftee.person.name,
+            year: secretSanta.year
+        }));
+    }
 
-            if (!result[year]) {
-                result[year] = {};
-            }
-
-            result[year][gifterName] = gifteeName;
+    async getSecretSantaHistoryByGroupId(groupId: string): Promise<SecretSantaHistoryDTO[]> {
+        const secretSantas = await this.db.secretSanta.findMany({
+            where: {
+                gifter: {
+                    is: {
+                        groupId: groupId,
+                    },
+                },
+                giftee: {
+                    is: {
+                        groupId: groupId,
+                    },
+                },
+            },
+            select: {
+                year: true,
+                gifter: {
+                    select: {
+                        person: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+                giftee: {
+                    select: {
+                        person: {
+                            select: {
+                                name: true,
+                            },
+                        },
+                    },
+                },
+            },
         });
 
-        return result;
+        return secretSantas.map(secretSanta => new SecretSantaHistoryDTO({
+            gifter: secretSanta.gifter.person.name,
+            giftee: secretSanta.giftee.person.name,
+            year: secretSanta.year
+        }));
     }
 
 }
