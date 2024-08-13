@@ -15,8 +15,22 @@ export class SecretSantaRepositoryImpl implements SecretSantaRepository{
             },
         });
     }
+    async getGroupSecretSantasByYear(groupId: string, year: number){
+        return this.db.secretSanta.findMany({
+            where: {
+                groupId: groupId,
+                year: {
+                    gte: year
+                },
+                select: {
+                    gifter: true,
+                    giftee: true
+                }
+            }
+        });
+    }
 
-    async findSecretSantasByGroupId(groupId: string) {
+    async getSecretSantasByGroupId(groupId: string) {
         const secretSantas = await this.db.secretSanta.findMany({
             where: {
                 gifter: {

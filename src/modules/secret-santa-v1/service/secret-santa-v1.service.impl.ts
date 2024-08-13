@@ -30,7 +30,7 @@ export class SecretSantaV1ServiceImpl implements SecretSantaV1Service {
             await this.secretSantaRepository.create(gifter, giftee);
             assignments[gifter] = giftee;
         }
-
+        //TODO: fix this shouldnt return ids but person names
         return assignments;
     }
 

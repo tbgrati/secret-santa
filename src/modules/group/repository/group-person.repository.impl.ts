@@ -17,8 +17,19 @@ export class GroupPersonRepositoryImpl implements GroupPersonRepository{
     async getGroupPersons(groupId:string){
         const groupPersons = await this.db.groupPerson.findMany({
             where: { groupId },
-            select: { id: true }
+            select: {
+                id: true,
+                select:{
+                    person: {
+                        select: {
+                            name: true
+                        }
+                    }
+                }
+            }
         });
+
+        //TODO: modify this map to include personName
         return groupPersons.map(groupPerson => groupPerson.id)
     }
 }
