@@ -6,8 +6,7 @@ import {GroupPersonRepositoryImpl} from "../repository/group-person.repository.i
 
 export const groupRouter = Router()
 
-export const groupPersonRepository = new GroupPersonRepositoryImpl(db)
-const groupService = new GroupServiceImpl(new GroupRepositoryImpl(db), groupPersonRepository)
+export const groupService = new GroupServiceImpl(new GroupRepositoryImpl(db), new GroupPersonRepositoryImpl(db))
 
 groupRouter.post('/', async (req, res) => {
     try {

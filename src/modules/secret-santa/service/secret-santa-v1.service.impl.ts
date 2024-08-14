@@ -1,16 +1,16 @@
-import {SecretSantaV1Service} from "./secret-santa-v1.service";
-import {GroupPersonRepository} from "../../group/repository/group-person.repository";
-import {SecretSantaRepository} from "../../secret-santa/repository/secret-santa.repository";
+import {SecretSantaRepository} from "../repository/secret-santa.repository";
 import {GroupPersonDTO} from "../../group/dto";
+import {SecretSantaGeneratorService} from "./secret-santa-generator";
+import {GroupService} from "../../group/service/group.service";
 
-export class SecretSantaV1ServiceImpl implements SecretSantaV1Service {
+export class SecretSantaV1ServiceImpl implements SecretSantaGeneratorService {
 
     constructor(
-        private groupPersonRepository: GroupPersonRepository,
+        private groupPersonService: GroupService,
         private secretSantaRepository: SecretSantaRepository
     ) {}
     async generate(groupId: string): Promise<Record<string,string>> {
-        const persons = await this.groupPersonRepository.getGroupPersons(groupId)
+        const persons = await this.groupPersonService.getGroupPersons(groupId)
 
         if (persons.length < 2) {
             throw new Error("Not enough participants for Secret Santa");

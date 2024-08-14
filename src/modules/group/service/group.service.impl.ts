@@ -16,6 +16,10 @@ export class GroupServiceImpl implements GroupService {
         return await this.groupRepository.createGroup(data);
     }
 
+    async getGroupPersons(groupId: string){
+        return await this.groupPersonRepository.getGroupPersons(groupId);
+    }
+
     async addPersonToGroup(personId: string, groupId: string) {
         const group = await this.groupRepository.findGroupById(groupId);
 

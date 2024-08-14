@@ -5,5 +5,4 @@ export class CreatePersonDTO{
     @IsNotEmpty()
     @IsString()
     name!: string
-
 }

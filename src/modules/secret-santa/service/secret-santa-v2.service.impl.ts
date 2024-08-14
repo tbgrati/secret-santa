@@ -1,13 +1,13 @@
-import {SecretSantaV2Service} from "./secret-santa-v2.service";
-import {GroupPersonRepositoryImpl} from "../../group/repository/group-person.repository.impl";
-import {SecretSantaRepositoryImpl} from "../../secret-santa/repository/secret-santa.repository.impl";
-import {SecretSantaHistoryDTO} from "../../secret-santa/dto";
+import {SecretSantaHistoryDTO} from "../dto";
 import {GroupPersonDTO} from "../../group/dto";
+import {GroupService} from "../../group/service/group.service";
+import {SecretSantaRepository} from "../repository/secret-santa.repository";
+import {SecretSantaGeneratorService} from "./secret-santa-generator";
 
-export class SecretSantaV2ServiceImpl implements SecretSantaV2Service{
+export class SecretSantaV2ServiceImpl implements SecretSantaGeneratorService{
     constructor(
-        private groupPersonRepository: GroupPersonRepositoryImpl,
-        private secretSantaRepository: SecretSantaRepositoryImpl
+        private groupService: GroupService,
+        private secretSantaRepository: SecretSantaRepository
     ) {}
 
     private wasDrawnPreviously(gifter: string, giftee: string,santaHistory: SecretSantaHistoryDTO[]): boolean{
@@ -17,9 +17,9 @@ export class SecretSantaV2ServiceImpl implements SecretSantaV2Service{
     async generate(groupId: string): Promise<Record<string, string>>{
         // just a constant used for altering the year limit for generating secret santas
         const yearDifLimit = 1
-        const yearMinLimit = (new Date().getFullYear()) - 1;
+        const yearMinLimit = (new Date().getFullYear()) - yearDifLimit;
         const santaHistory = await this.secretSantaRepository.getGroupSecretSantasByYear(groupId, yearMinLimit)
-        const groupPersons: GroupPersonDTO[] = await this.groupPersonRepository.getGroupPersons(groupId)
+        const groupPersons: GroupPersonDTO[] = await this.groupService.getGroupPersons(groupId)
 
         const assignments: Record<string, string> = {};
 
