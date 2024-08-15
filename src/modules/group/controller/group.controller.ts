@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {db} from "../../../utils/database";
+import db from "../../../utils/database";
 import {GroupServiceImpl} from "../service/group.service.impl";
 import {GroupRepositoryImpl} from "../repository/group.repository.impl";
 import {GroupPersonRepositoryImpl} from "../repository/group-person.repository.impl";
