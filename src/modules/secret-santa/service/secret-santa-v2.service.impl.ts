@@ -28,42 +28,37 @@ export class SecretSantaV2ServiceImpl implements SecretSantaGeneratorService{
         }
 
         const gifters: GroupPersonDTO[] = [...groupPersons];
-        const shuffledGiftees: GroupPersonDTO[] = this.shuffleArray([...groupPersons]);
+        const giftees: GroupPersonDTO[] = [...groupPersons];
+        const shiftIndex = this.getRandomInt(groupPersons.length);
+        let gifterCounter = 0
 
         for (const gifter of gifters) {
+            let gifteeIndex = (gifterCounter + shiftIndex) % groupPersons.length;
+            let giftee = giftees[gifteeIndex];
             let tries = 0;
-            let gifteeIndex = this.generateRandomInt(shuffledGiftees.length);
-            let giftee = shuffledGiftees[gifteeIndex];
 
-            while (this.wasDrawnPreviously(gifter.id, giftee.id, santaHistory) || gifter.id === giftee.id) {
-                if (tries === shuffledGiftees.length) {
-                    throw new Error("Could not find a valid giftee for gifter with ID " + gifter.id);
-                }
-                gifteeIndex = this.generateRandomInt(shuffledGiftees.length);
-                giftee = shuffledGiftees[gifteeIndex];
-                tries++;
+            while (
+                (this.wasDrawnPreviously(gifter.id, giftee.id, santaHistory) ||
+                    gifter.id === giftee.id ||
+                    Object.values(assignments).includes(giftee.id)) &&
+                tries < groupPersons.length
+                ) {
+                gifteeIndex = (gifteeIndex + tries) % groupPersons.length;
+                giftee = giftees[gifteeIndex];
+                tries++
             }
-
-            if (giftee) {
-                shuffledGiftees.splice(gifteeIndex, 1);
-                await this.secretSantaRepository.create(gifter.id, giftee.id);
-                assignments[gifter.name] = giftee.name;
+            if(tries === groupPersons.length){
+                throw new Error("Could not find a valid giftee for gifter with ID " + gifter.id);
             }
+            assignments[gifter.id] = giftee.id;
+            gifterCounter++
         }
+        this.secretSantaRepository.create(assignments)
         return assignments
     }
 
-    private generateRandomInt(max: number): number {
+    private getRandomInt(max: number): number {
         return Math.floor(Math.random() * max);
-    }
-
-
-    private shuffleArray(array: GroupPersonDTO[]): GroupPersonDTO[] {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
     }
 
 }

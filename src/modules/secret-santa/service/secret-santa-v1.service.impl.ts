@@ -23,9 +23,9 @@ export class SecretSantaV1ServiceImpl implements SecretSantaGeneratorService {
         for (let i = 0; i < shuffledPersons.length; i++) {
             const gifter = shuffledPersons[i];
             const giftee = shuffledPersons[(i + 1) % shuffledPersons.length];
-            await this.secretSantaRepository.create(gifter.id, giftee.id);
-            assignments[gifter.name] = giftee.name;
+            assignments[gifter.id] = giftee.id;
         }
+        await this.secretSantaRepository.create(assignments);
         return assignments;
     }
 
