@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {db} from "../../../utils/database";
+import db from "../../../utils/database";
 import {SecretSantaServiceImpl} from "../service/secret-santa.service.impl";
 import {SecretSantaRepositoryImpl} from "../repository/secret-santa.repository.impl";
 import {SecretSantaV1ServiceImpl} from "../service/secret-santa-v1.service.impl";
@@ -31,16 +31,18 @@ secretSantaRouter.post('/:groupId', async (req, res) => {
             case 'V1': {
                 const secretSantas = await secretSantaV1Service.generate(groupId);
                 res.status(201).json(secretSantas);
+                break
             }
             case 'V2': {
                 const secretSantas = await secretSantaV2Service.generate(groupId);
                 res.status(201).json(secretSantas);
+                break
             }
             default:{
-                res.status(400).json({error: 'Invalid version'});
+                res.status(500).json({error: 'Invalid version'});
+                break
             }
         }
-        res.status(201).json("secretSantas");
     } catch (error) {
         console.log(error)
         res.status(500).json({error: 'Failed to generate secret santa'});

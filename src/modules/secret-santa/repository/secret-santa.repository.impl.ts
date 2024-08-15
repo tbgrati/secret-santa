@@ -5,15 +5,17 @@ import {SecretSantaHistoryDTO} from "../dto";
 export class SecretSantaRepositoryImpl implements SecretSantaRepository{
 
     constructor(private db: PrismaClient){}
-    async create(gifterId: string, gifteeId: string) {
+    async create(assignments: Record<string, string>): Promise<void> {
         const currentYear = new Date().getFullYear();
 
-        return this.db.secretSanta.create({
-            data: {
-                gifter: { connect: { id: gifterId } },
-                giftee: { connect: { id: gifteeId } },
-                year: currentYear
-            },
+        const assignmentData = Object.entries(assignments).map(([gifterId, gifteeId]) => ({
+            gifterId, // Assuming these are the actual IDs
+            gifteeId,
+            year: currentYear
+        }));
+
+        await this.db.secretSanta.createMany({
+            data: assignmentData,
         });
     }
     async getGroupSecretSantasByYear(groupId: string, year: number): Promise<SecretSantaHistoryDTO[]>{
