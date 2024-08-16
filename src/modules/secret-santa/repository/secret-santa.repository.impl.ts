@@ -55,7 +55,6 @@ export class SecretSantaRepositoryImpl implements SecretSantaRepository{
             },
         });
 
-
         return secretSantas.map(secretSanta => new SecretSantaHistoryDTO({
             gifter: secretSanta.gifter.person.name,
             giftee: secretSanta.giftee.person.name,
