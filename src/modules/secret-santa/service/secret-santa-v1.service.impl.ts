@@ -2,6 +2,7 @@ import {SecretSantaRepository} from "../repository/secret-santa.repository";
 import {GroupPersonDTO} from "../../group/dto";
 import {SecretSantaGeneratorService} from "./secret-santa-generator";
 import {GroupService} from "../../group/service/group.service";
+import {InvalidRequestError} from "../../../utils/error";
 
 export class SecretSantaV1ServiceImpl implements SecretSantaGeneratorService {
 
@@ -13,7 +14,7 @@ export class SecretSantaV1ServiceImpl implements SecretSantaGeneratorService {
         const persons = await this.groupPersonService.getGroupPersons(groupId)
 
         if (persons.length < 2) {
-            throw new Error("Not enough participants for Secret Santa");
+            throw new InvalidRequestError("Not enough participants in this group for Secret Santa");
         }
 
         const shuffledPersons = this.shuffleArray(persons);

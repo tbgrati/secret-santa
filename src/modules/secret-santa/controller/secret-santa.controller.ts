@@ -5,6 +5,7 @@ import {SecretSantaRepositoryImpl} from "../repository/secret-santa.repository.i
 import {SecretSantaV1ServiceImpl} from "../service/secret-santa-v1.service.impl";
 import {SecretSantaV2ServiceImpl} from "../service/secret-santa-v2.service.impl";
 import {groupService} from "../../group/controller/group.controller";
+import {InvalidRequestError} from "../../../utils/error";
 
 
 export const secretSantaRouter = Router({ mergeParams: true })
@@ -39,8 +40,7 @@ secretSantaRouter.post('/:groupId', async (req, res, next) => {
                 break
             }
             default:{
-                res.status(500).json({error: 'Invalid version'});
-                break
+                throw new InvalidRequestError("Invalid version")
             }
         }
     } catch (error) {

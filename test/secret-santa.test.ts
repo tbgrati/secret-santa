@@ -149,10 +149,10 @@ test('v2 should not assign anyone to themselves or from last year', async () => 
 
     expect( Object.keys(assignations).length == groupPersons.length).toBeTruthy();
     expect(checkNoKeyEqualsValue(assignations)).toBeTruthy();
-    expect(checkNorepeatedPairs(assignations, mockSecretSantas)).toBeTruthy();
+    expect(checkNoRepeatedPairs(assignations, mockSecretSantas)).toBeTruthy();
 });
 
-function checkNorepeatedPairs(assignations: Record<string, string>, pastAssignations: Array<{ gifter: { person: { name: string } }, giftee: { person: { name: string } } }>): boolean {
+function checkNoRepeatedPairs(assignations: Record<string, string>, pastAssignations: Array<{ gifter: { person: { name: string } }, giftee: { person: { name: string } } }>): boolean {
     for (const [gifter, giftee] of Object.entries(assignations)) {
         for (const pastPair of pastAssignations) {
             if (pastPair.gifter.person.name === gifter && pastPair.giftee.person.name === giftee) {

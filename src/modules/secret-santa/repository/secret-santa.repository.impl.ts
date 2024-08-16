@@ -11,7 +11,7 @@ export class SecretSantaRepositoryImpl implements SecretSantaRepository{
         const currentYear = new Date().getFullYear();
 
         const assignmentData = Object.entries(assignments).map(([gifterId, gifteeId]) => ({
-            gifterId, // Assuming these are the actual IDs
+            gifterId,
             gifteeId,
             year: currentYear
         }));

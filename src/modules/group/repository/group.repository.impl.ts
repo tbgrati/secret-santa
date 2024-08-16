@@ -13,7 +13,6 @@ export class GroupRepositoryImpl implements GroupRepository{
     }
 
     async findGroupById(id: string) {
-        console.log(id);
         return this.db.group.findUnique({
             where: {
                 id,

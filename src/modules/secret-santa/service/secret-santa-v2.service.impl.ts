@@ -3,6 +3,7 @@ import {GroupPersonDTO} from "../../group/dto";
 import {GroupService} from "../../group/service/group.service";
 import {SecretSantaRepository} from "../repository/secret-santa.repository";
 import {SecretSantaGeneratorService} from "./secret-santa-generator";
+import {InvalidRequestError} from "../../../utils/error";
 
 export class SecretSantaV2ServiceImpl implements SecretSantaGeneratorService{
     constructor(
@@ -24,7 +25,7 @@ export class SecretSantaV2ServiceImpl implements SecretSantaGeneratorService{
         const assignments: Record<string, string> = {};
 
         if(groupPersons.length < 2 ){
-            throw new Error("Not enough participants for Secret Santa");
+            throw new InvalidRequestError("Not enough participants in this group for Secret Santa");
         }
 
         const gifters: GroupPersonDTO[] = [...groupPersons];
