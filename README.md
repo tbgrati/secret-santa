@@ -7,7 +7,7 @@ This project is a Node.js application using Express, Prisma, and PostgreSQL. The
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/secret-santa.git
+git clone https://github.com/tbgrati/secret-santa.git
 cd secret-santa
 ```
 
