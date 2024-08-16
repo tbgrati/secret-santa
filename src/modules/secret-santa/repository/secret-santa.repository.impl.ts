@@ -1,6 +1,8 @@
 import {SecretSantaRepository} from "./secret-santa.repository";
 import {PrismaClient} from "@prisma/client";
 import {SecretSantaHistoryDTO} from "../dto";
+import {PrismaClientKnownRequestError} from "@prisma/client/runtime/library";
+import {InvalidRequestError} from "../../../utils/error";
 
 export class SecretSantaRepositoryImpl implements SecretSantaRepository{
 
@@ -14,9 +16,14 @@ export class SecretSantaRepositoryImpl implements SecretSantaRepository{
             year: currentYear
         }));
 
-        await this.db.secretSanta.createMany({
-            data: assignmentData,
-        });
+        try{
+            await this.db.secretSanta.createMany({
+                data: assignmentData,
+            });
+        }
+        catch (e){
+            throw new InvalidRequestError("Secret santas have already been assigned for this year.");
+        }
     }
     async getGroupSecretSantasByYear(groupId: string, year: number): Promise<SecretSantaHistoryDTO[]>{
         const secretSantas = await this.db.secretSanta.findMany({

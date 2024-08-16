@@ -3,6 +3,7 @@ import {GroupRepository} from "../repository/group.repository";
 import {GroupService} from "./group.service";
 import {CreateGroupDTO} from "../dto";
 import {GroupPersonRepository} from "../repository/group-person.repository";
+import {NotFoundError} from "../../../utils/error";
 
 
 export class GroupServiceImpl implements GroupService {
@@ -26,7 +27,7 @@ export class GroupServiceImpl implements GroupService {
         if (group) {
             return await this.groupPersonRepository.addPersonToGroup(personId, groupId);
         } else {
-            throw new Error('Group not found');
+            throw new NotFoundError('Group not found');
         }
     }
 }

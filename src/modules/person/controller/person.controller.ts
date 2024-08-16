@@ -10,12 +10,12 @@ export const personRouter = Router()
 
 const personService = new PersonServiceImpl(new PersonRepositoryImpl(db))
 
-personRouter.post('/', BodyValidator(CreatePersonDTO), async (req, res) => {
+personRouter.post('/', BodyValidator(CreatePersonDTO), async (req, res, next) => {
     try {
         const person = await personService.createPerson(req.body);
         res.status(201).json(person);
     } catch (error) {
-        res.status(500).json({error:'Failed to create person'});
+        next(error);
     }
 })
 
