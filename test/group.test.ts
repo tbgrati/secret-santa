@@ -28,6 +28,11 @@ test('should create new group', async () => {
 test('should get persons from group by groupId', async () => {
     const groupId = '1';
 
+    const group = {
+        id: '1',
+        name: 'Group A'
+    }
+
     const groupPersons = [
         {
             id: '1',
@@ -49,6 +54,7 @@ test('should get persons from group by groupId', async () => {
     }));
 
     prismaMock.groupPerson.findMany.mockResolvedValue(groupPersons);
+    prismaMock.group.findUnique.mockResolvedValue(group)
 
     const groupPersonRepository = new GroupPersonRepositoryImpl(prismaMock);
     const groupRepository = new GroupRepositoryImpl(prismaMock);
@@ -62,18 +68,26 @@ test('should add person to group', async () => {
         id: '1',
         name: 'Group A'
     }
-    const groupDTO = new CreateGroupDTO();
-    groupDTO.name = group.name;
+    const person = {
+        id: '1',
+        name: 'Person A'
+    }
 
-    prismaMock.group.create.mockResolvedValue(group)
+    const groupPerson = {
+        groupId: '1',
+        personId: '1'
+    }
+
+    prismaMock.group.findUnique.mockResolvedValue(group)
+    prismaMock.groupPerson.create.mockResolvedValue(groupPerson)
 
     const groupPersonRepository = new GroupPersonRepositoryImpl(prismaMock)
     const groupRepository = new GroupRepositoryImpl(prismaMock)
     const groupService = new GroupServiceImpl(groupRepository,groupPersonRepository)
 
-    await expect(groupService.createGroup(groupDTO)).resolves.toEqual({
-        id: '1',
-        name: 'Group A'
+    await expect(groupService.addPersonToGroup(person.id, group.id)).resolves.toEqual({
+        personId: '1',
+        groupId: '1'
     })
 })
 

@@ -11,6 +11,11 @@ import {SecretSantaV2ServiceImpl} from "../src/modules/secret-santa/service/secr
 
 test('v1 should not assign anyone to themselves', async () => {
 
+    const group = {
+        id: '1',
+        name: 'Group A'
+    }
+
     const groupPersons = [
         {
             id: '1',
@@ -38,6 +43,7 @@ test('v1 should not assign anyone to themselves', async () => {
         }
     ];
     prismaMock.groupPerson.findMany.mockResolvedValue(groupPersons);
+    prismaMock.group.findUnique.mockResolvedValue(group)
 
     const groupPersonRepository = new GroupPersonRepositoryImpl(prismaMock);
     const groupRepository = new GroupRepositoryImpl(prismaMock);
@@ -52,6 +58,11 @@ test('v1 should not assign anyone to themselves', async () => {
 });
 
 test('v2 should not assign anyone to themselves or from last year', async () => {
+
+    const group = {
+        id: '1',
+        name: 'Group A'
+    }
 
     const groupPersons = [
         {
@@ -138,6 +149,7 @@ test('v2 should not assign anyone to themselves or from last year', async () => 
 
     prismaMock.groupPerson.findMany.mockResolvedValue(groupPersons);
     prismaMock.secretSanta.findMany.mockResolvedValue(mockSecretSantas);
+    prismaMock.group.findUnique.mockResolvedValue(group)
 
     const groupPersonRepository = new GroupPersonRepositoryImpl(prismaMock);
     const groupRepository = new GroupRepositoryImpl(prismaMock);
