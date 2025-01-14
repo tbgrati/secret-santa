@@ -43,28 +43,20 @@ export class SecretSantaRepositoryImpl implements SecretSantaRepository{
                 year: true,
                 gifter: {
                     select: {
-                        person: {
-                            select: {
-                                name: true,
-                            },
-                        },
+                        id:true
                     },
                 },
                 giftee: {
                     select: {
-                        person: {
-                            select: {
-                                name: true,
-                            },
-                        },
+                        id: true,
                     },
                 },
             },
         });
 
         return secretSantas.map(secretSanta => new SecretSantaHistoryDTO({
-            gifter: secretSanta.gifter.person.name,
-            giftee: secretSanta.giftee.person.name,
+            gifter: secretSanta.gifter.id,
+            giftee: secretSanta.giftee.id,
             year: secretSanta.year
         }));
     }

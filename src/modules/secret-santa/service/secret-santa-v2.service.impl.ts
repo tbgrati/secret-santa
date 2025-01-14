@@ -15,7 +15,7 @@ export class SecretSantaV2ServiceImpl implements SecretSantaGeneratorService{
         return santaHistory.some(santa => santa.gifter === gifter && santa.giftee === giftee)
     }
 
-    async generate(groupId: string): Promise<Record<string, string>>{
+    async generate(groupId: string, totalTries?: number): Promise<Record<string, string>>{
         // just a constant used for altering the year limit for generating secret santas
         const yearDifLimit = 1
         const yearMinLimit = (new Date().getFullYear()) - yearDifLimit;
@@ -39,17 +39,19 @@ export class SecretSantaV2ServiceImpl implements SecretSantaGeneratorService{
             let tries = 0;
 
             while (
-                (this.wasDrawnPreviously(gifter.id, giftee.id, santaHistory) ||
-                    gifter.id === giftee.id ||
-                    Object.values(assignments).includes(giftee.id)) &&
-                tries < groupPersons.length
+                this.wasDrawnPreviously(gifter.id, giftee.id, santaHistory) ||
+                gifter.id === giftee.id ||
+                Object.values(assignments).includes(giftee.id)
                 ) {
-                gifteeIndex = (gifteeIndex + tries) % groupPersons.length;
+                gifteeIndex = (gifteeIndex + 1) % groupPersons.length;
                 giftee = giftees[gifteeIndex];
-                tries++
+                tries++;
+                if (tries >= groupPersons.length) {
+                    return this.generate(groupId, totalTries ? totalTries + 1 : 1);
+                }
             }
-            if(tries === groupPersons.length){
-                throw new Error("Could not find a valid giftee for gifter with ID " + gifter.id);
+            if(totalTries === (groupPersons.length * 3)){
+                throw new InvalidRequestError("Unable to generate secret santas")
             }
             assignments[gifter.id] = giftee.id;
             gifterCounter++
